@@ -63,4 +63,20 @@ class OverviewServiceTest {
             PersonDto.from(personEntity, listOf(phoneDto)),
         )
     }
+
+    @Test
+    fun `upsert person - get personDto`() {
+        val personDto: PersonDto = easyRandom.nextObject(PersonDto::class.java)
+        val personEntity: PersonEntity = easyRandom.nextObject(PersonEntity::class.java)
+
+        every { personService.upsertPerson(personDto) } returns personEntity
+        every { phoneService.upsertPhoneForPerson(personEntity, personDto.phones) } returns listOf()
+
+        val persons = overviewService.upsertPerson(personDto)
+
+        assertThat(persons).isNotNull
+        assertThat(persons).isEqualTo(
+            PersonDto.from(personEntity, listOf()),
+        )
+    }
 }

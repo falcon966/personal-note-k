@@ -1,5 +1,6 @@
 package de.tuantu.personalnotek.service.domain
 
+import de.tuantu.personalnotek.persistence.model.PersonEntity
 import de.tuantu.personalnotek.persistence.model.PhoneEntity
 import java.util.*
 
@@ -11,9 +12,20 @@ data class PhoneDto(
     companion object {
         fun from(phone: PhoneEntity): PhoneDto =
             PhoneDto(
-                phone.number,
-                phone.id,
-                phone.name,
+                number = phone.number,
+                id = phone.id,
+                name = phone.name,
+            )
+
+        fun toEntity(
+            phoneDto: PhoneDto,
+            personEntity: PersonEntity?,
+        ): PhoneEntity =
+            PhoneEntity(
+                number = phoneDto.number,
+                name = phoneDto.name,
+                id = phoneDto.id,
+                person = personEntity,
             )
     }
 }

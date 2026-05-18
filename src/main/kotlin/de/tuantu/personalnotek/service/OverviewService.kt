@@ -28,4 +28,10 @@ class OverviewService(
             PersonDto.from(it, phoneService.getPhoneDtoForPersonId(it.id!!))
         }
     }
+
+    fun upsertPerson(personDto: PersonDto): PersonDto {
+        val personEntity = personService.upsertPerson(personDto)
+        val phoneList = phoneService.upsertPhoneForPerson(personEntity, personDto.phones)
+        return PersonDto.from(personEntity, phoneList)
+    }
 }

@@ -22,5 +22,13 @@ data class PersonDto(
                 email = person.email,
                 phones = phones,
             )
+
+        fun toEntity(personDto: PersonDto): PersonEntity =
+            PersonEntity(
+                id = personDto.id,
+                firstName = personDto.firstname,
+                lastName = personDto.lastname,
+                email = personDto.email,
+            )
     }
 }

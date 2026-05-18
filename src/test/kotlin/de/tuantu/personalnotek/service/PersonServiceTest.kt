@@ -3,6 +3,7 @@ package de.tuantu.personalnotek.service
 import de.tuantu.personalnotek.RepositoryTest
 import de.tuantu.personalnotek.persistence.PersonRepository
 import de.tuantu.personalnotek.persistence.model.PersonEntity
+import de.tuantu.personalnotek.service.domain.PersonDto
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.jeasy.random.EasyRandom
@@ -47,5 +48,49 @@ class PersonServiceTest {
             personService.getPersonEntityById(id)
         }.isInstanceOf(NoSuchElementException::class.java)
             .hasMessage("Person with id $id not found")
+    }
+
+    @Test
+    fun `upsert person - save new person - return personEntity`() {
+        val personDto: PersonDto =
+            easyRandom.nextObject(PersonDto::class.java).copy(
+                id = null,
+                phones = emptyList(),
+            )
+
+        personService.upsertPerson(personDto)
+
+        assertThat(personRepository.findAll()).hasSize(1)
+
+        assertThat(personRepository.findAll().first())
+            .usingRecursiveComparison()
+            .ignoringFields("id", "createdAt")
+            .isEqualTo(
+                PersonDto.toEntity(personDto),
+            )
+    }
+
+    @Test
+    fun `upsert person - update person - return personEntity`() {
+        val personEntity: PersonEntity = easyRandom.nextObject(PersonEntity::class.java)
+        personEntity.id = null
+        val currentPerson = personRepository.saveAndFlush(personEntity)
+
+        val personDto: PersonDto =
+            PersonDto.from(currentPerson, emptyList()).copy(
+                firstname = "Updated firstName",
+                lastname = "Updated Lastname",
+            )
+
+        personService.upsertPerson(personDto)
+
+        assertThat(personRepository.findAll()).hasSize(1)
+
+        assertThat(personRepository.findAll().first())
+            .usingRecursiveComparison()
+            .ignoringFields("createdAt")
+            .isEqualTo(
+                PersonDto.toEntity(personDto),
+            )
     }
 }

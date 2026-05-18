@@ -12,6 +12,7 @@ import org.jeasy.random.EasyRandom
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import java.util.UUID
 
 @RepositoryTest
 class PhoneServiceTest {
@@ -49,7 +50,7 @@ class PhoneServiceTest {
 
     @Test
     fun `find phone by id - not found - throw NoSuchElementException`() {
-        val id = java.util.UUID.randomUUID()
+        val id = UUID.randomUUID()
 
         assertThatThrownBy {
             phoneService.getPhoneById(id)
@@ -108,5 +109,52 @@ class PhoneServiceTest {
             .isEqualTo(
                 listOf(PhoneDto.from(savedPhoneExpected)),
             )
+    }
+
+    @Test
+    fun `upsert phone for person - update phone - return phoneDto`() {
+        val personEntity: PersonEntity = easyRandom.nextObject(PersonEntity::class.java)
+        personEntity.id = null
+        val savedPerson = personRepository.save(personEntity)
+        val currentPhone: PhoneEntity = easyRandom.nextObject(PhoneEntity::class.java)
+        currentPhone.id = null
+        currentPhone.person = savedPerson
+        val savedPhone = phoneRepository.save(currentPhone)
+
+        val phoneDto: PhoneDto = PhoneDto.from(savedPhone).copy(name = "Updated name")
+
+        phoneService.upsertPhoneForPerson(savedPerson, listOf(phoneDto))
+
+        val phone = phoneRepository.findAll()
+        assertThat(phone).hasSize(1)
+        assertThat(phone.first())
+            .usingRecursiveComparison()
+            .isEqualTo(PhoneDto.toEntity(phoneDto, savedPerson))
+    }
+
+    @Test
+    fun `upsert phone for person - save new phone delete deprecated ones - return phoneDto`() {
+        val phoneDto: PhoneDto = easyRandom.nextObject(PhoneDto::class.java).copy(id = null)
+        val personEntity: PersonEntity = easyRandom.nextObject(PersonEntity::class.java)
+        personEntity.id = null
+        val savedPerson = personRepository.save(personEntity)
+        val phoneEntityOld: PhoneEntity = easyRandom.nextObject(PhoneEntity::class.java)
+        phoneEntityOld.id = null
+        phoneEntityOld.person = savedPerson
+        phoneRepository.save(phoneEntityOld)
+
+        phoneService.upsertPhoneForPerson(savedPerson, listOf(phoneDto))
+
+        val targetPhone =
+            PhoneDto.toEntity(
+                phoneDto = phoneDto,
+                personEntity = savedPerson,
+            )
+        val phone = phoneRepository.findAll()
+        assertThat(phone).hasSize(1)
+        assertThat(phone.first())
+            .usingRecursiveComparison()
+            .ignoringFields("id")
+            .isEqualTo(targetPhone)
     }
 }
