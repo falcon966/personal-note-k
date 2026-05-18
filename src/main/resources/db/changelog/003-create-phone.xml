@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-5.0.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1772796265388-1" author="tuant">
+        <createTable tableName="phone">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_phone"/>
+            </column>
+            <column name="number" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="person_id" type="UUID"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1772796265388-2" author="tuant">
+        <addForeignKeyConstraint baseColumnNames="person_id" baseTableName="phone" constraintName="FK_PHONE_ON_PERSON"
+                                 referencedColumnNames="id" referencedTableName="person"/>
+    </changeSet>
+
+</databaseChangeLog>
