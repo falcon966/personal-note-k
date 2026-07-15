@@ -11,6 +11,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.jeasy.random.EasyRandom
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import java.util.UUID
 
 @ExtendWith(MockKExtension::class)
 class OverviewServiceTest {
@@ -68,11 +69,12 @@ class OverviewServiceTest {
     fun `upsert person - get personDto`() {
         val personDto: PersonDto = easyRandom.nextObject(PersonDto::class.java)
         val personEntity: PersonEntity = easyRandom.nextObject(PersonEntity::class.java)
+        val userId: UUID = UUID.randomUUID()
 
-        every { personService.upsertPerson(personDto) } returns personEntity
+        every { personService.upsertPerson(personDto, userId) } returns personEntity
         every { phoneService.upsertPhoneForPerson(personEntity, personDto.phones) } returns listOf()
 
-        val persons = overviewService.upsertPerson(personDto)
+        val persons = overviewService.upsertPerson(personDto, userId)
 
         assertThat(persons).isNotNull
         assertThat(persons).isEqualTo(

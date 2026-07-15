@@ -19,5 +19,6 @@ class PersonService(
     fun getAllPersons(): List<PersonEntity> = personRepository.findAll()
 
     @Transactional
-    fun upsertPerson(personDto: PersonDto): PersonEntity = personRepository.save(PersonDto.toEntity(personDto))
+    fun upsertPerson(personDto: PersonDto, userId: UUID): PersonEntity =
+        personRepository.save(PersonDto.toEntity(personDto, userId))
 }

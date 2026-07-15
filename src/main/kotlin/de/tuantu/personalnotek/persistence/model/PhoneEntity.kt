@@ -9,6 +9,8 @@ class PhoneEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     var id: UUID?,
+    @Column(name = "user_id", nullable = false)
+    var userId: UUID,
     @Column(name = "number", nullable = false)
     var number: String,
     @Column(name = "name", nullable = false)

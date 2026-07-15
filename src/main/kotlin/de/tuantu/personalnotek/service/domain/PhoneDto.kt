@@ -26,6 +26,7 @@ data class PhoneDto(
                 name = phoneDto.name,
                 id = phoneDto.id,
                 person = personEntity,
+                userId = personEntity?.userId ?: UUID.randomUUID(),
             )
     }
 }

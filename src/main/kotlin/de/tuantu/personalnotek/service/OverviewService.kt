@@ -29,8 +29,8 @@ class OverviewService(
         }
     }
 
-    fun upsertPerson(personDto: PersonDto): PersonDto {
-        val personEntity = personService.upsertPerson(personDto)
+    fun upsertPerson(personDto: PersonDto, userId: UUID): PersonDto {
+        val personEntity = personService.upsertPerson(personDto, userId)
         val phoneList = phoneService.upsertPhoneForPerson(personEntity, personDto.phones)
         return PersonDto.from(personEntity, phoneList)
     }

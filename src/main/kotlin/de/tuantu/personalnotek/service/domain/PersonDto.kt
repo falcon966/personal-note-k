@@ -23,12 +23,13 @@ data class PersonDto(
                 phones = phones,
             )
 
-        fun toEntity(personDto: PersonDto): PersonEntity =
+        fun toEntity(personDto: PersonDto, userId: UUID): PersonEntity =
             PersonEntity(
                 id = personDto.id,
                 firstName = personDto.firstname,
                 lastName = personDto.lastname,
                 email = personDto.email,
+                userId = userId
             )
     }
 }

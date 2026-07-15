@@ -10,6 +10,8 @@ class PersonEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     var id: UUID? = null,
+    @Column(name = "user_id", nullable = false)
+    var userId: UUID,
     @Column(name = "first_name", nullable = false, length = 50)
     var firstName: String,
     @Column(name = "last_name", nullable = false, length = 50)

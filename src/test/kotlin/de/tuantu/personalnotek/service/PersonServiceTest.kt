@@ -58,7 +58,9 @@ class PersonServiceTest {
                 phones = emptyList(),
             )
 
-        personService.upsertPerson(personDto)
+        val userId: UUID = UUID.randomUUID()
+
+        personService.upsertPerson(personDto, userId)
 
         assertThat(personRepository.findAll()).hasSize(1)
 
@@ -66,7 +68,7 @@ class PersonServiceTest {
             .usingRecursiveComparison()
             .ignoringFields("id", "createdAt")
             .isEqualTo(
-                PersonDto.toEntity(personDto),
+                PersonDto.toEntity(personDto, userId),
             )
     }
 
@@ -82,7 +84,7 @@ class PersonServiceTest {
                 lastname = "Updated Lastname",
             )
 
-        personService.upsertPerson(personDto)
+        personService.upsertPerson(personDto, currentPerson.userId)
 
         assertThat(personRepository.findAll()).hasSize(1)
 
@@ -90,7 +92,7 @@ class PersonServiceTest {
             .usingRecursiveComparison()
             .ignoringFields("createdAt")
             .isEqualTo(
-                PersonDto.toEntity(personDto),
+                PersonDto.toEntity(personDto, currentPerson.userId),
             )
     }
 }
