@@ -11,8 +11,8 @@ class OverviewService(
     val personService: PersonService,
     val phoneService: PhoneService,
 ) {
-    fun getAllPersons(): List<PersonDto> {
-        val persons: List<PersonEntity> = personService.getAllPersons()
+    fun getAllPersons(userId: UUID): List<PersonDto> {
+        val persons: List<PersonEntity> = personService.getAllPersons(userId)
         val personToPhonesDtoMap: Map<UUID, List<PhoneDto>> =
             phoneService.getPhoneDtoForPersonIdList(persons.mapNotNull { it.id })
         return persons.mapNotNull { personEntity ->

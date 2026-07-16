@@ -31,7 +31,7 @@ class OverviewServiceTest {
         val personEntity: PersonEntity = easyRandom.nextObject(PersonEntity::class.java)
         val phoneDto: PhoneDto = easyRandom.nextObject(PhoneDto::class.java)
 
-        every { personService.getAllPersons() } returns listOf(personEntity)
+        every { personService.getAllPersons(any()) } returns listOf(personEntity)
         every { phoneService.getPhoneDtoForPersonIdList(listOf(personEntity.id!!)) } returns
             mapOf(
                 personEntity.id!! to
@@ -40,7 +40,7 @@ class OverviewServiceTest {
                     ),
             )
 
-        val persons = overviewService.getAllPersons()
+        val persons = overviewService.getAllPersons(personEntity.userId)
 
         assertThat(persons).isNotNull
         assertThat(persons).hasSize(1)

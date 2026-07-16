@@ -16,17 +16,18 @@ class PersonRepositoryTest {
     private val easyRandom: EasyRandom = EasyRandom()
 
     @Test
-    fun testFindAll() {
+    fun testFindAllByUserId() {
         // given
         val person: PersonEntity = easyRandom.nextObject(PersonEntity::class.java)
         person.id = null
         val person2: PersonEntity = easyRandom.nextObject(PersonEntity::class.java)
         person2.id = null
+        person2.userId = person.userId
         personRepository.saveAndFlush(person)
         personRepository.saveAndFlush(person2)
 
         // when
-        val persons: List<PersonEntity> = personRepository.findAll()
+        val persons: List<PersonEntity> = personRepository.findAllByUserId(person.userId)
 
         // then
         AssertionsForInterfaceTypes.assertThat(persons).hasSize(2)

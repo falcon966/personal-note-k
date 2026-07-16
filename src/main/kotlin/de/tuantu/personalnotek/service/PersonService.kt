@@ -16,7 +16,9 @@ class PersonService(
             NoSuchElementException("Person with id $id not found")
         }
 
-    fun getAllPersons(): List<PersonEntity> = personRepository.findAll()
+    fun getAllPersons(
+        userId: UUID
+    ): List<PersonEntity> = personRepository.findAllByUserId(userId)
 
     @Transactional
     fun upsertPerson(personDto: PersonDto, userId: UUID): PersonEntity =
