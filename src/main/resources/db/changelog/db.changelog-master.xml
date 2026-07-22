@@ -9,5 +9,6 @@
     <include file="db/changelog/002-create-person.xml"/>
     <include file="db/changelog/003-create-phone.xml"/>
     <include file="db/changelog/004-add-user-id-to-person-and-phone-table.xml"/>
+    <include file="/db/changelog/005-add_note_table.xml"/>
 
 </databaseChangeLog>

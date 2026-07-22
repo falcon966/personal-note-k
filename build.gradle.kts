@@ -5,6 +5,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
     kotlin("plugin.jpa") version "2.2.21"
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
+    kotlin("plugin.lombok") version "2.2.21"
 }
 
 group = "de.tuantu"
@@ -51,6 +52,7 @@ dependencies {
     testImplementation("com.ninja-squad:springmockk:5.0.1")
     // Source: https://mvnrepository.com/artifact/io.mockk/mockk
     testImplementation("io.mockk:mockk:1.14.9")
+    testImplementation(kotlin("test"))
 }
 
 kotlin {
