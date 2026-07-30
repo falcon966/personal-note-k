@@ -3,6 +3,7 @@ package de.tuantu.personalnotek.persistance
 import de.tuantu.personalnotek.RepositoryTest
 import de.tuantu.personalnotek.persistence.PersonRepository
 import de.tuantu.personalnotek.persistence.model.PersonEntity
+import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.AssertionsForInterfaceTypes
 import org.jeasy.random.EasyRandom
 import org.junit.jupiter.api.Test
@@ -35,5 +36,23 @@ class PersonRepositoryTest {
             .assertThat(persons)
             .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id", "createdAt")
             .contains(person, person2)
+    }
+
+    @Test
+    fun `findByIdAndUserId - find one`(){
+        // given
+        val person: PersonEntity = easyRandom.nextObject(PersonEntity::class.java)
+        person.id = null
+        val person2: PersonEntity = easyRandom.nextObject(PersonEntity::class.java)
+        person2.id = null
+        person2.userId = person.userId
+        personRepository.saveAndFlush(person)
+        personRepository.saveAndFlush(person2)
+
+        // when
+        val result = personRepository.findByIdAndUserId(person.userId, person.id!!)
+
+        // then
+        assertThat(result).isEqualTo(person)
     }
 }

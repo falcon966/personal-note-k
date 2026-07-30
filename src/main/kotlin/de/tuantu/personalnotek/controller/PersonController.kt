@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.security.oauth2.jwt.Jwt
+import org.springframework.web.bind.annotation.PathVariable
+import java.util.UUID
 
 @RestController
 @RequestMapping("/person")
@@ -23,5 +25,15 @@ class PersonController(
     ): List<PersonDto> {
         val authData: AuthDataDto = AuthDataDto.parseAuthData(jwt)
         return overviewService.getAllPersons(authData.userId)
+    }
+
+    @GetMapping("/{id}")
+    fun getPersonDetails(
+        @PathVariable id: UUID,
+        @AuthenticationPrincipal jwt: Jwt
+    ): PersonDto {
+        val authData: AuthDataDto = AuthDataDto.parseAuthData(jwt)
+        val personDto = overviewService.getPersonById(id, authData.userId) ?: throw NoSuchElementException("Person with id $id not found")
+        return personDto
     }
 }

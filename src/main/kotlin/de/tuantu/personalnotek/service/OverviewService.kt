@@ -30,9 +30,9 @@ class OverviewService(
         }
     }
 
-    fun getPersonById(id: UUID): PersonDto? {
-        val personEntity = personService.getPersonEntityById(id)
-        val personId = personEntity?.id ?: throw IllegalArgumentException("Person with id $id not found")
+    fun getPersonById(id: UUID, userId: UUID): PersonDto? {
+        val personEntity = personService.getPersonEntityById(id, userId)
+        val personId = personEntity.id ?: throw IllegalArgumentException("Person with id $id not found")
         return personEntity.let {
             PersonDto.from(it, phoneService.getPhoneDtoForPersonId(personId), noteService.findAllByPersonId(personId))
         }

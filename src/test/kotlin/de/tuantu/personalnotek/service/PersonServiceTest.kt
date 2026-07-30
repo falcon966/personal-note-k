@@ -32,7 +32,7 @@ class PersonServiceTest {
         personEntity.id = null
         val savedPerson = personRepository.save(personEntity)
 
-        val personDto = personService.getPersonEntityById(savedPerson.id!!)
+        val personDto = personService.getPersonEntityById(savedPerson.id!!, savedPerson.userId)
 
         assertThat(personDto)
             .isEqualTo(
@@ -45,7 +45,7 @@ class PersonServiceTest {
         val id = UUID.randomUUID()
 
         assertThatThrownBy {
-            personService.getPersonEntityById(id)
+            personService.getPersonEntityById(id, UUID.randomUUID())
         }.isInstanceOf(NoSuchElementException::class.java)
             .hasMessage("Person with id $id not found")
     }

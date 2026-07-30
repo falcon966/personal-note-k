@@ -62,11 +62,11 @@ class OverviewServiceTest {
         val phoneDto: PhoneDto = easyRandom.nextObject(PhoneDto::class.java)
         val noteDto: NoteDto = easyRandom.nextObject(NoteDto::class.java)
 
-        every { personService.getPersonEntityById(personEntity.id!!) } returns personEntity
+        every { personService.getPersonEntityById(personEntity.id!!, personEntity.userId) } returns personEntity
         every { phoneService.getPhoneDtoForPersonId(personEntity.id!!) } returns listOf(phoneDto)
         every { noteService.findAllByPersonId(personEntity.id!!) } returns listOf(noteDto)
 
-        val persons = overviewService.getPersonById(personEntity.id!!)
+        val persons = overviewService.getPersonById(personEntity.id!!, personEntity.userId)
 
         assertThat(persons).isNotNull
         assertThat(persons).isEqualTo(

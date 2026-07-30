@@ -11,10 +11,9 @@ import java.util.*
 class PersonService(
     val personRepository: PersonRepository,
 ) {
-    fun getPersonEntityById(id: UUID): PersonEntity? =
-        personRepository.findById(id).orElseThrow {
+    fun getPersonEntityById(id: UUID, userId: UUID): PersonEntity =
+        personRepository.findByIdAndUserId(userId, id) ?: throw
             NoSuchElementException("Person with id $id not found")
-        }
 
     fun getAllPersons(
         userId: UUID
