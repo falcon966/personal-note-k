@@ -9,11 +9,13 @@ data class PersonDto(
     val lastname: String,
     val email: String?,
     val phones: List<PhoneDto>,
+    val notes: List<NoteDto>
 ) {
     companion object {
         fun from(
             person: PersonEntity,
-            phones: List<PhoneDto>,
+            phones: List<PhoneDto> = emptyList(),
+            notes: List<NoteDto> = emptyList()
         ): PersonDto =
             PersonDto(
                 id = person.id,
@@ -21,6 +23,7 @@ data class PersonDto(
                 lastname = person.lastName,
                 email = person.email,
                 phones = phones,
+                notes = notes
             )
 
         fun toEntity(personDto: PersonDto, userId: UUID): PersonEntity =
